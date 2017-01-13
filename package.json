@@ -1,0 +1,36 @@
+{
+  "name": "watzdprice-service",
+  "version": "0.0.1",
+  "description": "Watzdprice Service",
+  "main": "src/index.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node src/index.js",
+    "test": "./node_modules/.bin/_mocha",
+    "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --"
+  },
+  "keywords": [
+    "swagger"
+  ],
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.11.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "mocha-circleci-reporter": "0.0.2",
+    "sinon": "^1.17.6"
+  },
+  "dependencies": {
+    "config": "^1.24.0",
+    "connect": "^3.2.0",
+    "js-yaml": "^3.3.0",
+    "md5": "^2.2.1",
+    "mssql": "^3.3.0",
+    "pg": "^6.1.2",
+    "postgrator": "^2.8.2",
+    "swagger-tools": "0.10.1",
+    "urlify": "^0.3.6"
+  }
+}
