@@ -1,0 +1,79 @@
+---
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: "Watzdprice Service"
+  license:
+    name: "MIT"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /updateproduct:
+    put:
+      description: "Updates `product` objects"
+      operationId: "updateproductPUT"
+      parameters:
+      - in: "body"
+        name: "product"
+        description: "The `product` to update"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"
+      responses:
+        204:
+          description: "Product is succesfully updated"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Default"
+definitions:
+  Error:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+      fields:
+        type: "string"
+  Product:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "The product name"
+        maxLength: 256
+      description:
+        type: "string"
+        description: "The product description"
+      shop:
+        type: "string"
+        description: "The shop name"
+        maxLength: 256
+      eancode:
+        type: "string"
+        description: "The product eancode"
+        maxLength: 256
+      category:
+        type: "string"
+        description: "The product category"
+        maxLength: 256
+      url:
+        type: "string"
+        description: "The product url"
+      image:
+        type: "string"
+        description: "The product image"
+      price:
+        type: "number"
+        format: "float"
+        description: "The product price"
+      datetime:
+        type: "string"
+        format: "date-time"
+        description: "The price datetime"
+    required: ["name", "shop", "url", "price", "datetime"]

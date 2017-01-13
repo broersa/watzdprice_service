@@ -1,0 +1,7 @@
+{
+  "dbHost": "dbhost",
+  "dbUser": "dbuser",
+  "dbPassword": "dbpassword",
+  "dbDatabase": "dbdatabase",
+  "serverPort": "serverPort"
+}
