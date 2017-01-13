@@ -3,5 +3,5 @@
   "dbUser": "dbuser",
   "dbPassword": "dbpassword",
   "dbDatabase": "dbdatabase",
-  "serverPort": "serverPort"
+  "serverPort": "8080"
 }
