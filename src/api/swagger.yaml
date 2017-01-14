@@ -54,6 +54,10 @@ definitions:
         type: "string"
         description: "The shop name"
         maxLength: 256
+      brand:
+        type: "string"
+        description: "The brand name"
+        maxLength: 256
       eancode:
         type: "string"
         description: "The product eancode"

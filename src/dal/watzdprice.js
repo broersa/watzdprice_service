@@ -1,8 +1,10 @@
 'use strict';
 
+var moment = require('moment');
+
 module.exports = {
   getProduct: function (client, productid, callback) {
-    client.query('select prokey, proid, proname, proshop, proean, procategory, procreated, prolastupdate, proprice, prodescription, prourl, proimage from product where proid=$1 for update', [productid], function (err, result) {
+    client.query('select prokey, proid, proname, proshop, probrand, proean, procategory, procreated, prolastupdate, proprice, prodescription, prourl, proimage from product where proid=$1 for update', [productid], function (err, result) {
       if (err) {
         return callback(err);
       }
@@ -13,15 +15,25 @@ module.exports = {
         prokey: parseInt(result.rows[0].prokey),
         proid: result.rows[0].proid,
         proname: result.rows[0].proname,
-        proprice: parseFloat(result.rows[0].proprice)
+        proshop: result.rows[0].proshop,
+        probrand: result.rows[0].probrand,
+        proean: result.rows[0].proean,
+        procategory: result.rows[0].procategory,
+        procreated: moment(result.rows[0].procreated),
+        prolastupdate: moment(result.rows[0].prolastupdate),
+        proprice: parseFloat(result.rows[0].proprice),
+        prodescription: result.rows[0].prodescription,
+        prourl: result.rows[0].prourl,
+        proimage: result.rows[0].proimage
       });
     });
   },
   addProduct: function (client, product, callback) {
-    client.query('insert into product (proid, proname, proshop, proean, procategory, procreated, prolastupdate, proprice, prodescription, prourl, proimage) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING prokey', [
+    client.query('insert into product (proid, proname, proshop, probrand, proean, procategory, procreated, prolastupdate, proprice, prodescription, prourl, proimage) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING prokey', [
       product.proid,
       product.proname,
       product.proshop,
+      product.probrand,
       product.proean,
       product.procategory,
       product.procreated,
@@ -40,7 +52,8 @@ module.exports = {
       });
   },
   updateProduct: function (client, product, callback) {
-    client.query('update product set proean=$1, procategory=$2, prolastupdate=$3, proprice=$4, prodescription=$5, proimage=$6 WHERE proid=$7', [
+    client.query('update product set probrand=$1, proean=$2, procategory=$3, prolastupdate=$4, proprice=$5, prodescription=$6, proimage=$7 WHERE proid=$8', [
+      product.probrand,
       product.proean,
       product.procategory,
       product.prolastupdate,
