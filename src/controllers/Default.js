@@ -6,6 +6,7 @@ module.exports.updateproductPUT = function updateproductPUT (req, res, next) {
   watzdprice.updateProduct({
     name: req.swagger.params.product.value.name,
     shop: req.swagger.params.product.value.shop,
+    brand: req.swagger.params.product.value.brand,
     ean: req.swagger.params.product.value.eancode,
     category: req.swagger.params.product.value.category,
     datetime: req.swagger.params.product.value.datetime,

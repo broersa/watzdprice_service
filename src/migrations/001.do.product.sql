@@ -3,6 +3,7 @@ create table product (
   proid varchar(255) not null,
   proname varchar(255) not null,
   proshop varchar(255) not null,
+  probrand varchar(255),
   proean varchar(255),
   procategory varchar(255),
   procreated timestamptz not null,
