@@ -26,6 +26,7 @@ exports.updateProduct = function(product, callback) {
           proid: proid,
           proname: product.name,
           proshop: product.shop,
+          probrand: product.brand,
           proean: product.ean,
           procategory: product.category,
           procreated: product.datetime,
@@ -56,6 +57,7 @@ exports.updateProduct = function(product, callback) {
         var prokey = result.prokey;
         dal.updateProduct(client, {
           proean: product.ean,
+          probrand: product.brand,
           procategory: product.category,
           prolastupdate: product.datetime,
           proprice: product.price,
