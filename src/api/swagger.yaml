@@ -22,8 +22,35 @@ paths:
         schema:
           $ref: "#/definitions/Product"
       responses:
-        204:
+        200:
           description: "Product is succesfully updated"
+          schema:
+            title: "Operation"
+            type: object
+            properties:
+              operation:
+                type: string
+                description: "added or updated"
+            required: ["operation"]
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Default"
+  /addshoploadstats:
+    post:
+      description: "Add a new shop load status line"
+      operationId: "addshoploadstatsPOST"
+      parameters:
+      - in: "body"
+        name: "shoploadstats"
+        description: "The `shoploadstats` to add"
+        required: true
+        schema:
+          $ref: "#/definitions/ShopLoadStats"
+      responses:
+        204:
+          description: "ShopLoadStats is succesfully added"
         default:
           description: "Unexpected error"
           schema:
@@ -81,3 +108,27 @@ definitions:
         format: "date-time"
         description: "The price datetime"
     required: ["name", "shop", "url", "price", "datetime"]
+  ShopLoadStats:
+    type: "object"
+    properties:
+      shop:
+        type: "string"
+        description: "The shop name"
+        maxLength: 256
+      start:
+        type: "string"
+        format: "date-time"
+        description: "The start of the load"
+      end:
+        type: "string"
+        format: "date-time"
+        description: "The end of the load"
+      added:
+        type: "integer"
+        format: "int64"
+        description: "The number of new products added"
+      updated:
+        type: "integer"
+        format: "int64"
+        description: "The number of existing products updated"
+    required: ["shop", "start", "end", "added", "updated"]

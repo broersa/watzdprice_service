@@ -80,6 +80,21 @@ module.exports = {
         }
         callback(null, result.rows[0].hiskey);
       });
-
+  },
+  addShopLoadStats: function (client, shopLoadStats, callback) {
+    client.query('insert into shoploadstats (slsshop, slsstart, slsend, slsadded, slsupdated) VALUES ($1, $2, $3, $4, $5) RETURNING slskey', [
+      shopLoadStats.shop,
+      shopLoadStats.start,
+      shopLoadStats.end,
+      shopLoadStats.added,
+      shopLoadStats.updated], function (err, result) {
+        if (err) {
+          return callback(err);
+        }
+        if (result.rowCount !== 1) {
+          return callback(null, null);
+        }
+        callback(null, result.rows[0].slskey);
+      });
   }
 }
