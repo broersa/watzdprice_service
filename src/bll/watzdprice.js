@@ -44,13 +44,13 @@ exports.updateProduct = function(product, callback) {
             hisproduct: result,
             hisupdate: product.datetime,
             hisprice: product.price
-          }, function (err, result) {
+          }, function (err) {
             if (err) {
               conn.rollback(client, done);
               return callback(err);
             }
             conn.commit(client, done);
-            return callback(null);
+            return callback(null, 'added');
           })
         });
       } else {
@@ -79,10 +79,32 @@ exports.updateProduct = function(product, callback) {
               return callback(err);
             }
             conn.commit(client, done);
-            return callback(null);
+            return callback(null, 'updated');
           })
         });
       }
+    });
+  });
+}
+
+exports.addShopLoadStats = function(shopLoadStats, callback) {
+  conn.execute(function (err, client, done) {
+    if (err) {
+      return callback(err);
+    }
+    dal.addShopLoadStats(client, {
+      shop: shopLoadStats.shop,
+      start: shopLoadStats.start,
+      end: shopLoadStats.end,
+      added: shopLoadStats.added,
+      updated: shopLoadStats.updated,
+    }, function (err) {
+      if (err) {
+        conn.rollback(client, done);
+        return callback(err);
+      }
+      conn.commit(client, done);
+      return callback();
     });
   });
 }
