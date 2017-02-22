@@ -21,7 +21,8 @@ postgrator.setConfig({
 
 postgrator.migrate('max', function (err, migrations) {
   if (err) {
-    return console.log(err)
+    console.error(err)
+    return postgrator.endConnection(function() { return;});
   } else {
     console.log(migrations)
   }
