@@ -19,12 +19,10 @@ postgrator.setConfig({
   password: config.dbPassword
 });
 
-postgrator.migrate('max', function (err, migrations) {
+postgrator.migrate('max', function (err) {
   if (err) {
     console.error(err)
     return postgrator.endConnection(function() { return;});
-  } else {
-    console.log(migrations)
   }
   postgrator.endConnection(function () {
     // connection is closed, or will close in the case of SQL Server
@@ -58,6 +56,24 @@ postgrator.migrate('max', function (err, migrations) {
 
       // Serve the Swagger documents and Swagger UI
       app.use(middleware.swaggerUi());
+
+      app.use(function(err, req, res) {
+        if (typeof err !== 'object') {
+          err = {
+            message: String(err)
+          };
+        } else {
+          Object.defineProperty(err, 'message', { enumerable: true });
+        }
+        if (err.name === 'MyError') {
+          console.error(JSON.stringify(err));
+          res.statusCode = 500;
+          res.end();
+        } else {
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify(err));
+        }
+      });
 
       // Start the server
       http.createServer(app).listen(config.serverPort, function () {

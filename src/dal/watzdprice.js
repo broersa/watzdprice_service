@@ -1,12 +1,13 @@
 'use strict';
 
 var moment = require('moment');
+var MyError = require('../MyError.js');
 
 module.exports = {
   getProduct: function (client, productid, callback) {
     client.query('select prokey, proid, proname, proshop, probrand, proean, procategory, procreated, prolastupdate, proprice, prodescription, prourl, proimage from product where proid=$1 for update', [productid], function (err, result) {
       if (err) {
-        return callback(err);
+        return callback(new MyError('ERROR', 'getProduct', 'Error', { productid: productid }, err));
       }
       if (result.rowCount !== 1) {
         return callback(null, null);
@@ -43,7 +44,10 @@ module.exports = {
       product.prourl,
       product.proimage], function (err, result) {
         if (err) {
-          return callback(err);
+          if (err.code === '23505') {
+            return callback(new MyError('DUPLICATEKEY', 'addProduct', 'Duplicate key error', { product: product }, err));
+          }
+          return callback(new MyError('ERROR', 'addProduct', 'Error', { product: product }, err));
         }
         if (result.rowCount !== 1) {
           return callback(null, null);
@@ -62,7 +66,7 @@ module.exports = {
       product.proimage,
       product.proid], function (err) {
       if (err) {
-        return callback(err);
+        return callback(new MyError('ERROR', 'updateProduct', 'Error', { product: product }, err));
       }
       callback(null);
     });
@@ -73,7 +77,10 @@ module.exports = {
       history.hisupdate,
       history.hisprice], function (err, result) {
         if (err) {
-          return callback(err);
+          if (err.code === '23505') {
+            return callback(new MyError('DUPLICATEKEY', 'addHistory', 'Duplicate key error', { history: history }, err));
+          }
+          return callback(new MyError('ERROR', 'addHistory', 'Error', { history: history }, err));
         }
         if (result.rowCount !== 1) {
           return callback(null, null);
@@ -89,7 +96,7 @@ module.exports = {
       shopLoadStats.added,
       shopLoadStats.updated], function (err, result) {
         if (err) {
-          return callback(err);
+          return callback(new MyError('ERROR', 'addShopLoadStats', 'Error', { shopLoadStats: shopLoadStats }, err));
         }
         if (result.rowCount !== 1) {
           return callback(null, null);

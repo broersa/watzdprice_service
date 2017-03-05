@@ -32,10 +32,14 @@ paths:
                 type: string
                 description: "added or updated"
             required: ["operation"]
-        default:
-          description: "Unexpected error"
+        400:
+          description: "Bad request"
           schema:
             $ref: "#/definitions/Error"
+        403:
+          description: "Forbidden"
+        500:
+          description: "Internal error"
       x-swagger-router-controller: "Default"
   /addshoploadstats:
     post:
@@ -51,10 +55,14 @@ paths:
       responses:
         204:
           description: "ShopLoadStats is succesfully added"
-        default:
-          description: "Unexpected error"
+        400:
+          description: "Bad request"
           schema:
             $ref: "#/definitions/Error"
+        403:
+          description: "Forbidden"
+        500:
+          description: "Internal error"
       x-swagger-router-controller: "Default"
 definitions:
   Error:
