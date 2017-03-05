@@ -4,7 +4,7 @@
  */
 
 var pg = require('pg');
-
+var MyError = require('../MyError.js');
 var pool;
 
 module.exports = {
@@ -35,11 +35,11 @@ module.exports = {
   execute: function (callback) {
     pool.connect(function (err, client, done) {
       if (err) {
-        return callback(err);
+        return callback(new MyError('ERROR', 'execute', 'Error', { }, err));
       }
       client.query('START TRANSACTION', function (err) {
         if (err) {
-          return callback(err);
+          return callback(new MyError('ERROR', 'execute', 'Error', { }, err));
         }
         callback(null, client, done);
       });

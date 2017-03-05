@@ -1,9 +1,10 @@
 'use strict';
 
 var watzdprice = require('../bll/watzdprice.js');
+var MyError = require('../MyError.js');
 
 module.exports.updateproductPUT = function updateproductPUT (req, res, next) {
-  watzdprice.updateProduct({
+  var product = {
     name: req.swagger.params.product.value.name,
     shop: req.swagger.params.product.value.shop,
     brand: req.swagger.params.product.value.brand,
@@ -14,10 +15,14 @@ module.exports.updateproductPUT = function updateproductPUT (req, res, next) {
     description: req.swagger.params.product.value.description,
     url: req.swagger.params.product.value.url,
     image: req.swagger.params.product.value.image
-  }, function (err, result) {
+  };
+  watzdprice.updateProduct(product , function (err, result) {
     if (err) {
-      console.error(err);
-      return next(err);
+      if (err.code === 'DUPLICATEKEY') {
+        res.statusCode = 400;
+        res.end(JSON.stringify({code: 'DUPLICATEKEY', message: 'Duplicate key error', fields: JSON.stringify(product) }));
+      }
+      return next(new MyError('ERROR', 'updateproduct', 'Error', { product: product }, err));
     }
     res.statusCode = 200;
     res.end(JSON.stringify({operation: result}));
@@ -25,16 +30,16 @@ module.exports.updateproductPUT = function updateproductPUT (req, res, next) {
 };
 
 module.exports.addshoploadstatsPOST = function addshoploadstatsPOST (req, res, next) {
-  watzdprice.addShopLoadStats({
+  var shopLoadStats = {
     shop: req.swagger.params.shoploadstats.value.shop,
     start: req.swagger.params.shoploadstats.value.start,
     end: req.swagger.params.shoploadstats.value.end,
     added: req.swagger.params.shoploadstats.value.added,
     updated: req.swagger.params.shoploadstats.value.updated
-  }, function (err) {
+  };
+  watzdprice.addShopLoadStats(shopLoadStats, function (err) {
     if (err) {
-      console.error(err);
-      return next(err);
+      return next(new MyError('ERROR', 'updateproduct', 'Error', { shopLoadStats: shopLoadStats }, err));
     }
     res.statusCode = 204;
     res.end();

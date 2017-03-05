@@ -2,6 +2,7 @@
 
 var conn = require('../dal/pgConnection.js');
 var dal = require('../dal/watzdprice.js');
+var MyError = require('../MyError.js');
 
 var md5 = require('md5');
 var urlify = require('urlify').create({
@@ -14,12 +15,12 @@ exports.updateProduct = function(product, callback) {
   var proid = generateId(product.name, product.url);
   conn.execute(function (err, client, done) {
     if (err) {
-      return callback(err);
+      return callback(new MyError('ERROR', 'updateProduct', 'Error', { product: product }, err));
     }
     dal.getProduct(client, proid, function (err, result) {
       if (err) {
         conn.rollback(client, done);
-        return callback(err);
+        return callback(new MyError('ERROR', 'updateProduct', 'Error', { product: product }, err));
       }
       if (result===null) {
         dal.addProduct(client, {
@@ -38,7 +39,10 @@ exports.updateProduct = function(product, callback) {
         }, function (err, result) {
           if (err) {
             conn.rollback(client, done);
-            return callback(err);
+            if (err.code === 'DUPLICATEKEY') {
+              return callback(new MyError('DUPLICATEKEY', 'updateProduct', 'Duplicate key error', { product: product }, err));
+            }
+            return callback(new MyError('ERROR', 'updateProduct', 'Error', { product: product }, err));
           }
           dal.addHistory(client, {
             hisproduct: result,
@@ -47,7 +51,10 @@ exports.updateProduct = function(product, callback) {
           }, function (err) {
             if (err) {
               conn.rollback(client, done);
-              return callback(err);
+              if (err.code === 'DUPLICATEKEY') {
+                return callback(new MyError('DUPLICATEKEY', 'updateProduct', 'Duplicate key error', { product: product }, err));
+              }
+              return callback(new MyError('ERROR', 'updateProduct', 'Error', { product: product }, err));
             }
             conn.commit(client, done);
             return callback(null, 'added');
@@ -67,7 +74,7 @@ exports.updateProduct = function(product, callback) {
         }, function (err) {
           if (err) {
             conn.rollback(client, done);
-            return callback(err);
+            return callback(new MyError('ERROR', 'updateProduct', 'Error', { product: product }, err));
           }
           dal.addHistory(client, {
             hisproduct: prokey,
@@ -76,7 +83,10 @@ exports.updateProduct = function(product, callback) {
           }, function (err) {
             if (err) {
               conn.rollback(client, done);
-              return callback(err);
+              if (err.code === 'DUPLICATEKEY') {
+                return callback(new MyError('DUPLICATEKEY', 'updateProduct', 'Duplicate key error', { product: product }, err));
+              }
+              return callback(new MyError('ERROR', 'updateProduct', 'Error', { product: product }, err));
             }
             conn.commit(client, done);
             return callback(null, 'updated');
@@ -90,7 +100,7 @@ exports.updateProduct = function(product, callback) {
 exports.addShopLoadStats = function(shopLoadStats, callback) {
   conn.execute(function (err, client, done) {
     if (err) {
-      return callback(err);
+      return callback(new MyError('ERROR', 'addShopLoadStats', 'Error', { shopLoadStats: shopLoadStats }, err));
     }
     dal.addShopLoadStats(client, {
       shop: shopLoadStats.shop,
@@ -101,7 +111,7 @@ exports.addShopLoadStats = function(shopLoadStats, callback) {
     }, function (err) {
       if (err) {
         conn.rollback(client, done);
-        return callback(err);
+        return callback(new MyError('ERROR', 'addShopLoadStats', 'Error', { shopLoadStats: shopLoadStats }, err));
       }
       conn.commit(client, done);
       return callback();
