@@ -16,7 +16,8 @@ postgrator.setConfig({
   host: config.dbHost,
   database: config.dbDatabase,
   username: config.dbUser,
-  password: config.dbPassword
+  password: config.dbPassword,
+  ssl: true
 });
 
 postgrator.migrate('max', function (err) {
