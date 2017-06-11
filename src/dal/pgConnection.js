@@ -18,7 +18,8 @@ module.exports = {
       password: cfg.dbPassword,
       host: cfg.dbHost,
       database: cfg.dbDatabase,
-      ssl: true
+      ssl: true,
+      idleTimeoutMillis: 1000
     }
 
     pool = new pg.Pool(configuration);
